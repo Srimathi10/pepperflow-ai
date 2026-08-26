@@ -185,3 +185,47 @@ See CONTRIBUTING.md. Run tests with: pytest --tb=short -q
 ## License
 
 MIT
+
+---
+
+## Author & Technical Leadership
+
+### Why I Built This
+
+This project addresses a specific problem I identified while working as a Product Architect across enterprise environments. After building multiple production systems — chatbots, document intelligence platforms, workflow automation — I observed that critical engineering decisions were being made without systematic validation.
+
+### What I Architected
+
+I designed the core reasoning architecture with a focus on reproducibility and auditability. The key insight was separating understanding (LLM) from decision-making (deterministic logic) — preventing the common failure mode where AI systems make claims they cannot validate.
+
+### Technical Decisions I Made
+
+- Chose deterministic algorithms over LLM generation for critical decisions
+- Designed the system for auditability from day one
+- Built evaluation pipelines before building features
+- Focused on production patterns: circuit breakers, event sourcing, confidence calibration
+
+### What I Implemented
+
+All core logic — the reasoning engines, evaluation pipelines, and API layers — was implemented by me. The codebase demonstrates production-grade engineering: test-driven development, structured error handling, and comprehensive documentation.
+
+### What I Learned
+
+1. Deterministic systems are more trustworthy than creative ones for enterprise decisions
+2. Evaluation datasets are more valuable than the code that processes them
+3. Production patterns (circuit breakers, event sourcing) solve real problems
+
+### Future Research & Development
+
+- Learning from user feedback to improve recommendations
+- Expanding the knowledge base with real-world patterns
+- Integrating with cloud pricing APIs for real-time cost estimates
+
+---
+
+**Author:** Srimathi  
+**GitHub:** [github.com/Srimathi10](https://github.com/Srimathi10)  
+**Related Projects:**
+- [AI Architecture Decision Engine](https://github.com/Srimathi10/ai-architecture-decision-engine) — Deterministic architecture recommendations
+- [Enterprise RAG Copilot](https://github.com/Srimathi10/enterprise-rag-copilot) — Production-grade knowledge assistant
+- [PepperFlow AI](https://github.com/Srimathi10/pepperflow-ai) — Agentic workflow automation

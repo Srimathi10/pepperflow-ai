@@ -59,6 +59,7 @@ class Event:
     timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
     data: Dict[str, Any] = field(default_factory=dict)
     metadata: Dict[str, Any] = field(default_factory=dict)
+    hash_chain: str = ""
 
     def to_dict(self) -> Dict:
         return asdict(self)
@@ -118,6 +119,28 @@ class EventStore:
             if e.event_id == event_id:
                 break
         return result
+
+    def _apply_event(self, state: dict, event: Event) -> dict:
+        """Apply a single event to reconstruct state."""
+        et = event.event_type
+        if et == EventType.WORKFLOW_CREATED:
+            state["status"] = "created"
+            state["context"] = event.data.get("context", {})
+        elif et == EventType.WORKFLOW_EXECUTED:
+            state["status"] = "running"
+        elif et == EventType.STEP_STARTED:
+            state["step_states"][str(event.step_index)] = "running"
+        elif et == EventType.STEP_COMPLETED:
+            state["step_states"][str(event.step_index)] = "completed"
+            state["current_step_index"] = event.step_index + 1
+        elif et == EventType.STEP_FAILED:
+            state["step_states"][str(event.step_index)] = "failed"
+            state["status"] = "failed"
+        elif et == EventType.WORKFLOW_COMPLETED:
+            state["status"] = "completed"
+        elif et == EventType.WORKFLOW_FAILED:
+            state["status"] = "failed"
+        return state
 
     def reconstruct_state(self, workflow_id: str) -> WorkflowSnapshot:
         """Reconstruct current state by replaying all events.
@@ -203,4 +226,9 @@ class EventStore:
             "status_changed": state_a.status != state_b.status,
             "old_status": state_a.status,
             "new_status": state_b.status,
-            "step_index_changed": state_a.current_step_index != s
+            "step_index_changed": state_a.current_step_index != state_b.current_step_index,
+            "old_step": state_a.current_step_index,
+            "new_step": state_b.current_step_index,
+            "data_changed": state_a.context != state_b.context,
+        }
+        return diff

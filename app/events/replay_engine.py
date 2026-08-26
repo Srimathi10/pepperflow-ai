@@ -14,14 +14,14 @@ USE CASES:
 """
 
 from typing import Dict, Any, List, Optional
-from app.events.event_store import EventStore, Event, EventType, event_store
+from app.events.event_store import EventStore, Event, EventType
 
 
 class ReplayEngine:
     """Replay workflows from any checkpoint with optional context injection."""
 
     def __init__(self, store: EventStore = None):
-        self.store = store or event_store
+        self.store = store or EventStore()
 
     def replay_from(
         self,
